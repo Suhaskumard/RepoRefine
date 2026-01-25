@@ -5,7 +5,7 @@ import { analyzeProfile } from './actions';
 import { ProfileAnalysis } from '@/types';
 import { AuditChart } from '@/components/audit-chart';
 import { Card, Badge, ProgressBar } from '@/components/ui-parts';
-import { Loader2, Github, AlertTriangle, CheckCircle, Quote, Star, Users, MapPin, Building } from 'lucide-react';
+import { Loader2, Github, AlertTriangle, CheckCircle, Quote, Star, Users, ArrowLeft, RefreshCcw } from 'lucide-react';
 
 export default function Home() {
   const [loading, setLoading] = useState(false);
@@ -26,7 +26,12 @@ export default function Home() {
     }
   }
 
-  // Helper to determine color based on score
+  // Reset state to go back to home
+  const handleReset = () => {
+    setData(null);
+    setError("");
+  };
+
   const getScoreColor = (score: number) => {
     if (score >= 80) return "text-emerald-400";
     if (score >= 50) return "text-amber-400";
@@ -44,16 +49,30 @@ export default function Home() {
       {/* Navbar */}
       <nav className="border-b border-slate-800 p-4 bg-[#020617]/80 backdrop-blur-xl sticky top-0 z-50">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-2 text-blue-500 font-bold text-xl tracking-tight">
+          <div 
+            className="flex items-center gap-2 text-blue-500 font-bold text-xl tracking-tight cursor-pointer hover:opacity-80 transition"
+            onClick={handleReset}
+          >
             <Github className="w-6 h-6" />
             <span>GitHub Doctor</span>
           </div>
+
+          {/* BACK BUTTON: Only shows when data is present */}
+          {data && (
+            <button 
+              onClick={handleReset}
+              className="flex items-center gap-2 text-sm font-medium text-slate-400 hover:text-white transition bg-slate-800/50 hover:bg-slate-800 px-4 py-2 rounded-full border border-slate-700"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Go Back
+            </button>
+          )}
         </div>
       </nav>
 
       <div className="max-w-6xl mx-auto p-4 md:p-8 space-y-12">
         
-        {/* Search Hero */}
+        {/* Search Hero (Only visible when no data) */}
         {!data && (
           <section className="text-center py-20 space-y-8 animate-in fade-in zoom-in duration-500">
             <div className="space-y-4">
@@ -76,11 +95,14 @@ export default function Home() {
                   required
                 />
                 <div className="border-l border-slate-800 mx-2"></div>
+                
+                {/* DROPDOWN FIX: Added text-black to options */}
                 <select name="persona" className="bg-transparent text-slate-300 text-sm font-medium px-2 outline-none cursor-pointer hover:text-white">
-                  <option value="recruiter">Recruiter</option>
-                  <option value="mentor">Mentor</option>
-                  <option value="roast">Roast Mode</option>
+                  <option value="recruiter" className="text-black">Recruiter</option>
+                  <option value="mentor" className="text-black">Mentor</option>
+                  <option value="roast" className="text-black">Roast Mode</option>
                 </select>
+
                 <button 
                   disabled={loading}
                   className="bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-lg font-bold transition flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed ml-2"
@@ -97,10 +119,10 @@ export default function Home() {
         {data && (
           <div className="animate-in fade-in slide-in-from-bottom-8 duration-700 space-y-8">
             
-            {/* --- NEW HEADER LAYOUT --- */}
+            {/* --- HEADER LAYOUT --- */}
             <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
               
-              {/* Profile Identity Card (Spans 8 cols) */}
+              {/* Profile Identity Card */}
               <div className="md:col-span-8 bg-slate-900/50 border border-slate-800 rounded-2xl p-6 md:p-8 flex flex-col md:flex-row gap-6 items-center md:items-start backdrop-blur-sm">
                 <img 
                   src={data.avatarUrl} 
@@ -125,7 +147,7 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Health Score Card (Spans 4 cols) */}
+              {/* Health Score Card */}
               <div className={`md:col-span-4 rounded-2xl p-8 flex flex-col items-center justify-center border ${getScoreBg(data.scores.total)}`}>
                 <span className="text-slate-400 font-medium uppercase tracking-widest text-sm mb-2">Overall Grade</span>
                 <span className={`text-8xl font-black tracking-tighter ${getScoreColor(data.scores.total)}`}>
@@ -140,7 +162,7 @@ export default function Home() {
               </div>
             </div>
 
-            {/* --- AI REVIEW SECTION (Full Width) --- */}
+            {/* --- AI REVIEW SECTION --- */}
             <div className="relative">
               <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl blur opacity-20"></div>
               <div className="relative bg-slate-900 border border-slate-800 p-8 md:p-10 rounded-2xl shadow-2xl">
@@ -164,7 +186,7 @@ export default function Home() {
             {/* --- METRICS & DATA GRID --- */}
             <div className="grid grid-cols-1 md:grid-cols-12 gap-8 pt-4">
               
-              {/* Left Column: Stats & Flags (4 cols) */}
+              {/* Left Column: Stats & Flags */}
               <div className="md:col-span-4 space-y-8">
                 <Card>
                   <h3 className="font-bold text-white mb-6 text-lg">Skill Balance</h3>
@@ -189,7 +211,7 @@ export default function Home() {
                 </Card>
               </div>
 
-              {/* Right Column: Repos & Roadmap (8 cols) */}
+              {/* Right Column: Repos & Roadmap */}
               <div className="md:col-span-8 space-y-8">
                 
                 {/* Repositories */}
@@ -219,7 +241,6 @@ export default function Home() {
                               </div>
                            </div>
                            
-                           {/* Issues Pills */}
                            <div className="flex flex-wrap gap-2 mt-3">
                               {repo.issues.length === 0 && <Badge variant="success">Perfect Score</Badge>}
                               {repo.issues.map((issue, j) => (
