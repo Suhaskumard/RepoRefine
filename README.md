@@ -2,9 +2,9 @@
 
 🔗 **Live Demo:** https://repo-refine.vercel.app/
 
-**RepoRefine** is a rule-based GitHub profile audit tool that analyzes repositories, activity patterns, and profile quality to detect weaknesses and generate actionable improvements — making your GitHub recruiter-ready.
+**RepoRefine** is a GitHub profile and repository audit tool that analyzes profiles, repository links, activity patterns, tech stacks, README quality, and project health to detect weaknesses and generate actionable improvements — making your GitHub presence recruiter-ready.
 
-Unlike AI-powered tools, RepoRefine uses deterministic logic and GitHub GraphQL analysis to provide transparent scoring and structured feedback.
+RepoRefine combines deterministic GitHub GraphQL checks with optional Groq-powered review summaries so scoring stays transparent while recommendations can still feel personalized.
 
 ---
 
@@ -18,13 +18,16 @@ Unlike AI-powered tools, RepoRefine uses deterministic logic and GitHub GraphQL 
 - Recruiter impression score
 
 ### 📂 Repository Health Analysis
-- README quality check
+- Analyze a single GitHub repository from its URL
+- Tech stack detection from languages, manifests, config files, topics, Docker, and CI signals
+- README quality scoring with detected and missing sections
 - License detection
 - Maintenance activity check
-- Open issue aging detection
+- Open issue count detection
 - CI/CD presence detection
 - Test folder detection
 - Documentation scoring
+- Feature and update recommendations for the given repository
 
 ### 📊 Commit & Activity Analysis
 - Commit consistency detection
@@ -53,7 +56,7 @@ Unlike AI-powered tools, RepoRefine uses deterministic logic and GitHub GraphQL 
 - **Frontend:** Next.js (App Router)
 - **Styling:** Tailwind CSS
 - **Charts:** Recharts
-- **API:** GitHub GraphQL API and OpenAI API
+- **API:** GitHub GraphQL API and optional Groq API
 - **Auth:** GitHub Personal Access Token
 
 ---
@@ -74,7 +77,7 @@ npm install
 Create a .env.local file:
 ``` bash
 GITHUB_TOKEN=your_github_pat_token
-OPENAI_API_KEY=your_openai_api_key
+GROQ_API_KEY=your_groq_api_key_optional
 ```
 ### 4️⃣ Run locally
 ```bash
@@ -92,11 +95,13 @@ RepoRefine uses GitHub GraphQL queries to fetch:
 - Repository data
 - Commit history
 - Issues & pull requests
-- Then applies rule-based audit logic to:
+- Then it applies deterministic audit logic to:
 - Detect weaknesses
 - Calculate scores
 - Generate structured improvement suggestions
-No external AI APIs are used.
+- Identify the tech stack and README improvements for a pasted GitHub repository URL
+
+If `GROQ_API_KEY` is configured, RepoRefine can also generate persona-based review commentary for profile audits.
 
 ### 📦 Future Enhancements
 - PDF export mode
