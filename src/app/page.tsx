@@ -79,6 +79,7 @@ const handleRefresh = async () => {
 
           {/* BACK BUTTON: Only shows when data is present */}
 {data && (
+  
   <div className="flex items-center gap-2">
     <button
       onClick={handleRefresh}
@@ -255,14 +256,16 @@ const handleRefresh = async () => {
                            <div className="flex justify-between items-start mb-3">
                               <div>
                                 <h4 className="font-bold text-blue-400 text-lg group-hover:text-blue-300 transition">{repo.name}</h4>
-                                <div className="flex gap-3 text-xs text-slate-500 mt-1">
-                                  <span>{repo.language}</span>
-                                  <span>•</span>
-                                  <span>{repo.stars} Stars</span>
-                                  <span>•</span>
-                                  <span>Updated {repo.lastUpdated}</span>
-                                </div>
-                              </div>
+                                      <div className="flex gap-3 text-xs text-slate-500 mt-1">
+                                        <span>{repo.language}</span>
+                                        <span>|</span>
+                                        <span>{repo.stars} Stars</span>
+                                        <span>|</span>
+                                        <span>{repo.forks} Forks</span>
+                                        <span>|</span>
+                                        <span>Updated {repo.lastUpdated}</span>
+                                      </div>                              
+                                  </div>
                               <div className="flex flex-col items-end">
                                 <span className={`text-2xl font-black ${getScoreColor(repo.score)}`}>
                                   {repo.score}
